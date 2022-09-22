@@ -1,18 +1,25 @@
 const db = require('../models/index');
-const { users, cars } = db;
+
+const {User, car} = db;
 
 
 
 
- const getUsers = (req, res, next) => {
-    users.findAll({ include: cars })
+/* const getUsers = (req, res, next) => {
+    User.findAll()
         .then(users => res.status(200).send(users))
         .catch(err => next(err))
-} 
+}
+ */
+  const getUsers = (req, res, next) => {
+    User.findAll({ include: car })
+        .then(users => res.status(200).send(users))
+        .catch(err => next(err))
+}  
 
 const getUser = (req, res, next) => {
     const id = req.params.id;
-    Users.findOne({ where: { id }, include: cars})
+    User.findOne({ where: { id }, include: car})
         .then(user => res.status(200).send(user))
         .catch(err => next(err));
 }
@@ -34,13 +41,14 @@ const editUser = (req, res, next) => {
 
 const deleteUser = (req, res, next) => {
     const id = req.params.id;
-    user.destroy({ where: { id } })
+    User.destroy({ where: { id } })
         .then(users => res.status(200).send("User Destroyed"))
         .catch(err => next(err));
 }
 
 module.exports = {
     getUsers,
+    
    getUser,
     editUser,
     deleteUser,
