@@ -10,11 +10,11 @@ const port = 3000;
 //app.use('/', router);
 //app.use([errorLogger, errorParser])
 
-  const requestTime = function(req, res, next) {
-   req.requestTime = Date.now();
-   next();
-  }
-   app.use(requestTime);
+ // const requestTime = function(req, res, next) {
+  // req.requestTime = Date.now();
+  // next();
+  //}
+   // app.use(requestTime);
 
    //app.use('/',function(req, res){
    // var responseText = "Hello World !!!"
