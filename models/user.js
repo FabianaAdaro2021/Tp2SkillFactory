@@ -1,29 +1,61 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
+const {  Model} = require('sequelize');
+const db = require('./index')
+let rolesValidos = {
+    values: ["ADMIN", "USER"],
+    message: '{VALUE} no es un rol válido'
+}
+const Schema = Model.Schema;
+
+let usuarioSchema = new Schema({
+
+    
+    name: {
+      
+      type: String,
+      allowNull: false,
+      unique: false,
+      required: [true, 'El nombre es necesario'],
+    },
+    lastName: {
+      type: String,
+      allowNull: false,
+      unique: false,
+      required: [true, 'El apellido es necesario'],
+    },
+    email: {
+      type: String,
+      defaultValue: null,
+      allowNull: true,
+      required: [true, 'El correo es obligatorio'],
+    },
+    password: {
+      type: String,
+      allowNull: false,
+      required: [true, 'La contraseña es obligatoria'],
+    },
+    role: {
+      type: String,
+      default: 'USER',
+      required: [true],
+      enum: rolesValidos,
   }
-  User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
-    address: DataTypes.STRING,
-    city: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    dni: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
-  return User;
+
+    
+ });
+ 
+  
+  // elimina la key password del objeto que retorna al momento de crear un usuario
+usuarioSchema.methods.toJSON = function() {
+  let user = this;
+  let userObject = user.toObject();
+  delete userObject.password;
+  return userObject;
+}
+user.associate = (models) => {
+  user.hasMany(models.cars, {  foreignKey: 'userId' });
 };
+const User = db.model('user', usuarioSchema);
+
+module.exports = User;
+
