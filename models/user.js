@@ -1,61 +1,46 @@
-'use strict';
-const {  Model} = require('sequelize');
-const db = require('./index')
-let rolesValidos = {
-    values: ["ADMIN", "USER"],
-    message: '{VALUE} no es un rol válido'
+const { Model } = require('sequelize');
+let rolesValidos = {  values: ["ADMIN", "USER"],
+  message: '{VALUE} no es un role válido'
 }
-const Schema = Model.Schema;
 
-let usuarioSchema = new Schema({
+module.exports = (sequelize, DataTypes) => {
 
-    
+  const user = sequelize.define('user', {
+   
     name: {
-      
-      type: String,
+      type: DataTypes.STRING(255),
       allowNull: false,
       unique: false,
-      required: [true, 'El nombre es necesario'],
     },
-    lastName: {
-      type: String,
+    lastname: {
+      type: DataTypes.STRING(255),
       allowNull: false,
       unique: false,
-      required: [true, 'El apellido es necesario'],
     },
     email: {
-      type: String,
+      type: DataTypes.STRING,
       defaultValue: null,
-      allowNull: true,
-      required: [true, 'El correo es obligatorio'],
+      allowNull: true
     },
     password: {
-      type: String,
+      type: DataTypes.STRING(255),
       allowNull: false,
-      required: [true, 'La contraseña es obligatoria'],
     },
     role: {
-      type: String,
+      type: DataTypes.STRING(255),
       default: 'USER',
       required: [true],
       enum: rolesValidos,
   }
+  }, {
+    timestamps: true,
+    tableName: 'users',
+  });
 
-    
- });
- 
-  
-  // elimina la key password del objeto que retorna al momento de crear un usuario
-usuarioSchema.methods.toJSON = function() {
-  let user = this;
-  let userObject = user.toObject();
-  delete userObject.password;
-  return userObject;
-}
-user.associate = (models) => {
-  user.hasMany(models.cars, {  foreignKey: 'userId' });
+  user.associate = (models) => {
+    user.hasMany(models.cars, { foreignKey: 'userId' });
+  };
+
+  return user;
 };
-const User = db.model('user', usuarioSchema);
-
-module.exports = User;
 

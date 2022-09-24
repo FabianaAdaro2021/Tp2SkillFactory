@@ -24,7 +24,7 @@ const editCar = (req, res, next) => {
     const id = req.params.id;
     const newcar = req.body;
     console.log(newcar);
-    Cars.update(newcar, { where: { id }})
+    cars.update(newcar, { where: { id }})
         .then(car => res.status(200).send("car Updated"))
         .catch(err => next(err));
 }
