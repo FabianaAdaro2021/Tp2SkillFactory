@@ -18,7 +18,7 @@ const notFound = (error, req, res) => {
  router.post('/login', usersController.login)
  router.post('/register', [checkMail],usersController.register)
  
- router.get('/users',[checkLoggedIn] ,usersController.findAllUsers)
+ router.get('/users',[checkLoggedIn],usersController.findAllUsers)
  router.get('/user', usersController.findUser)
  router.put('/editme', [checkLoggedUser], usersController.editLoggedUser)
  router.put('/user', [checkAdmin],usersController.editUser)

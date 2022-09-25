@@ -71,13 +71,13 @@ module.exports = {
     },
     //todos los usuarios
     findAllUsers  (req, res, next) {
-        user.find({}, (err, user) => {
-            if(err) next(err);
-            else {
-                res.status(200).send(user)
-            }
-        })    
-    },
+        user.findAll({include:cars})
+        .then(cars => res.status(200).send(cars))
+        .catch(err => next(err))        
+     },
+       
+    
+    
     
     findUser (req, res, next) {
         user.findOne(req.body, (err, user) => {
@@ -99,7 +99,7 @@ module.exports = {
     },
     //elimina ususario
     deleteUser  (req, res, next)  {
-        User.findOneAndRemove(req.body, (err, user) => {
+        user.findOneAndRemove(req.body, (err, user) => {
             if(err) next(err);
             else {
                 res.status(200).send(user)
@@ -109,7 +109,7 @@ module.exports = {
     //se edita asi mismo
     editLoggedUser  (req, res, next)  {
         const changes = req.body;
-        User.findOneAndUpdate({ _id: req.user._id }, changes, (err, user) => {
+        user.findOneAndUpdate({ _id: req.user._id }, changes, (err, user) => {
             if(err) next(err);
             else {
                 res.status(200).send(user)
