@@ -19,11 +19,13 @@ const errorLogger = (error, req, res, next) => {
       err.status = 404;
       return next(err); 
     }
-  
+
+    
   const errorHandler = {
     errorLogger,
     errorParser,  
-    notFound
+    notFound,
+    
   }
   
   module.exports = errorHandler;

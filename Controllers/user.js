@@ -1,67 +1,42 @@
-const userService = require('../services/user.services');
-
-
-async function login(req, res, next) {
-  try {
-    const { username, password } = req.body;
-    const user = await userService.login(username, password);
-
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-}
-
-
-async function userInfo(req, res, next) {
-  try {
-    const { id } = req.params;
-    const userData = await userService.getOne({
-      id,
-    });
-    res.json(userData);
-  } catch (error) {
-    next(error);
-  }
-}
-
-
-async function editUser(req, res, next) {
-  try {
-    const { id } = req.params;
-    const {
-        name, lastname, email, phonenumber, cuil, adress
-    } = req.body;
-
-    const userData = await userService.edit(id, {
-        name, lastname, email, phonenumber, cuil, adress
-    });
-    res.json(userData)
-    .status(201)
-    .json({ success: true, message: 'El usuario ha sido editado correctamente' });;
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function createUser(req, res, next) {
-  try {
-    const { username, password, name, lastname, email, phonenumber, cuil, adress,role} = req.body;
-    const created = await userService.newUser(username, password, name, lastname, email, phonenumber, cuil, adress,role );
-    if (created) {
-      res
-        .status(201)
-        .json({ success: true, message: 'El usuario ha sido creado correctamente' });
-    }
-  } catch (error) {
-    next(error);
-  }
- 
-}
+const db = require('../models/index');
+const { cars, user } = db;
+const bcrypt = require ('bcrypt');
+const jwt = require ('jsonwebtoken');
+const authConfig = require ('../config/auth')
 
 module.exports = {
-  login,
-  userInfo,
-  editUser,
-  createUser,
-};
+    //Login
+    login (req,res){
+
+    },
+
+    //Registro
+    register (req,res){
+        // encriptamos contraseña
+       let password= bcrypt.hashSync(req.body.password, Number.parseInt(authConfig.round ));
+
+       //Crear un usuario
+       user.create({
+        name: req.body.name,
+        lastname: req.body.lastname,
+        password: password,
+        email: req.body.email,
+        address: req.body.address,
+        role: req.body.role
+       }).then (user =>{
+
+        //creamos el token
+          let token = jwt.sign ({ user: user}, authConfig.secret,{
+            expiresIn: authConfig.expires
+          });
+          res.json ({
+            user: user,
+            token : token
+
+            });
+
+       }). catch(err =>{
+        res.status(500).json(err)
+       });
+    }
+}

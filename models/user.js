@@ -1,35 +1,47 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+//const {  Model} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      user.hasMany(models.cars, {
-        foreignKey: 'userId'
-      })
-    }
-  }
-  user.init({
-    username: DataTypes.STRING, allowNull: false,unique: false,
-    password: DataTypes.STRING,allowNull: false,
-    name: DataTypes.STRING,defaultValue: null,allowNull: true,
-    lastname: DataTypes.STRING,defaultValue: null,allowNull: true,
-    email: DataTypes.STRING,defaultValue: null,allowNull: true,
-    phonenumber: DataTypes.STRING,defaultValue: null,allowNull: true,
-    cuil: DataTypes.STRING,defaultValue: null,allowNull: true,
-    address: DataTypes.STRING,defaultValue: null,allowNull: true,
-    role: DataTypes.STRING,default: 'USER', required: true,
-  }, {
-    sequelize,
-    modelName: 'user',
-  });
   
+    const user = sequelize.define('user',{
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        required: [true, 'El nombre es necesario'],
+      },
+      lastname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        required: [true, 'El apellido es necesario'],
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        required: [true, 'La contraseña es obligatoria'],
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        required: [true, 'El correo es necesario'],
+      },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        required: [true, 'La direccion es necesaria'],
+      },
+      role: {
+        type: DataTypes.STRING,
+        default: 'USER',
+        required: [true],
+      },
+     },{
+      timestamps: true,
+      tableName: 'users',
+    });
   
+    user.associate = (models) => {
+      user.hasMany(models.cars, { foreignKey: 'userId' });
+    };
+   
+ 
   return user;
 };
