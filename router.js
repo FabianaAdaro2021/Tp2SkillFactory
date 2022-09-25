@@ -20,7 +20,7 @@ const notFound = (error, req, res) => {
  
  router.get('/users',[checkLoggedIn],usersController.findAllUsers)
  router.get('/user', usersController.findUser)
- router.put('/editme', [checkLoggedUser], usersController.editLoggedUser)
+ router.put('/editme', [checkLoggedUser], usersController.editUserLogged)
  router.put('/user', [checkAdmin],usersController.editUser)
  router.delete('/user',[checkAdmin], usersController.deleteUser) 
   

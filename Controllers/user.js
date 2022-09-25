@@ -16,7 +16,7 @@ module.exports = {
             }
         }).then ( user=>{
             if(!user){
-                res.status(404).json({msg:"Ususario con correo no encontrado"});
+                res.status(404).json({msg:"Usuario no encontrado"});
 
             } else{
                 if(bcrypt.compareSync(password,user.password)){
@@ -77,43 +77,39 @@ module.exports = {
      },
        
     
-    
-    
+           
+    //usuario por Id
     findUser (req, res, next) {
-        user.findOne(req.body, (err, user) => {
-            if(err) next(err);
-            else {
-                res.status(200).send(user)
-            }
-        })
+        const id = req.params.id;
+        user.findOne({ where: { id }})
+            .then(user => res.status(200).send(user))
+            .catch(err => next(err));
     },
-    //edita usuario
+    //edita usuario admin
     editUser  (req, res, next)  {
-        const { filter, changes } = req.body;
-        user.findOneAndUpdate(filter, changes, (err, user) => {
-            if(err) next(err);
-            else {
-                res.status(200).send(user)
-            }
-        })
+        const id = req.params.id;
+        const newuser = req.body;        
+        user.update(newuser, { where: { id }})
+            .then(user => res.status(200).send("user Updated"))
+            .catch(err => next(err));
     },
+
+     //edita usuario registrado
+     editUserLogged (req, res, next)  {
+        const id = req.params.id;
+        const newuser = req.body;        
+        user.update(newuser, { where: { id }})
+            .then(user => res.status(200).send("user Updated"))
+            .catch(err => next(err));
+    },
+
     //elimina ususario
     deleteUser  (req, res, next)  {
-        user.findOneAndRemove(req.body, (err, user) => {
-            if(err) next(err);
-            else {
-                res.status(200).send(user)
-            }
-        })
+        const id = req.params.id;
+    user.destroy({ where: { id } })
+        .then(() => res.status(200).send("user Destroyed"))
+        .catch(err => next(err));
+        
     },
-    //se edita asi mismo
-    editLoggedUser  (req, res, next)  {
-        const changes = req.body;
-        user.findOneAndUpdate({ _id: req.user._id }, changes, (err, user) => {
-            if(err) next(err);
-            else {
-                res.status(200).send(user)
-            }
-        })
-    }
-}
+       }
+
