@@ -16,14 +16,14 @@ const notFound = (error, req, res) => {
   router.use(bodyParser.json())
 
  router.post('/login', usersController.login)
- router.post('/register', usersController.register)
+ router.post('/register', [checkMail],usersController.register)
  
- /*router.get('/users',[checkLoggedIn] ,usersController.findAllUsers)
+ router.get('/users',[checkLoggedIn] ,usersController.findAllUsers)
  router.get('/user', usersController.findUser)
  router.put('/editme', [checkLoggedUser], usersController.editLoggedUser)
  router.put('/user', [checkAdmin],usersController.editUser)
  router.delete('/user',[checkAdmin], usersController.deleteUser) 
-  */
+  
  router.get('/cars', carsController.getCars)
 router.get('/cars/:id',carsController.getCar)
  router.put('/cars/:id', carsController.editCar)
