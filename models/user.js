@@ -1,46 +1,35 @@
-const { Model } = require('sequelize');
-let rolesValidos = {  values: ["ADMIN", "USER"],
-  message: '{VALUE} no es un role válido'
-}
-
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-
-  const user = sequelize.define('user', {
-   
-    name: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: false,
-    },
-    lastname: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      defaultValue: null,
-      allowNull: true
-    },
-    password: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    role: {
-      type: DataTypes.STRING(255),
-      default: 'USER',
-      required: [true],
-      enum: rolesValidos,
+  class user extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      user.hasMany(models.cars, {
+        foreignKey: 'userId'
+      })
+    }
   }
+  user.init({
+    username: DataTypes.STRING, allowNull: false,unique: false,
+    password: DataTypes.STRING,allowNull: false,
+    name: DataTypes.STRING,defaultValue: null,allowNull: true,
+    lastname: DataTypes.STRING,defaultValue: null,allowNull: true,
+    email: DataTypes.STRING,defaultValue: null,allowNull: true,
+    phonenumber: DataTypes.STRING,defaultValue: null,allowNull: true,
+    cuil: DataTypes.STRING,defaultValue: null,allowNull: true,
+    address: DataTypes.STRING,defaultValue: null,allowNull: true,
+    role: DataTypes.STRING,default: 'USER', required: true,
   }, {
-    timestamps: true,
-    tableName: 'users',
+    sequelize,
+    modelName: 'user',
   });
-
-  user.associate = (models) => {
-    user.hasMany(models.cars, { foreignKey: 'userId' });
-  };
-
+  
+  
   return user;
 };
-
